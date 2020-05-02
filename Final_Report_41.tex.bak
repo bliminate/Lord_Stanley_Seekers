@@ -94,7 +94,7 @@ periodID & period initial goal differential & blocked shots away & blocked shots
 
 After preparing the data, a number of visualizations were performed to better understand the relationships. 
 
-Figure \ref{fig:1} contains a Seabornviolin plot. In this particular plot the difference between the home and away value of each attribute against the change in goal differential at the beginning and ending of the period. The penalty differential and takeaway differential appeared to have a strong relationship which makes sense. If you are on a powerplay more than your opponent in a period, you will have more goals. Same argument can be made for takeaways. Nonetheless, some attributes had more impact on the outcome than others.
+Figure \ref{fig:1} contains a Seaborn violin plot. In this particular plot the difference between the home and away value of each attribute against the change in goal differential at the beginning and ending of the period. The penalty differential and takeaway differential appeared to have a strong relationship which makes sense. If you are on a powerplay more than your opponent in a period, you will have more goals. Same argument can be made for takeaways. Nonetheless, some attributes had more impact on the outcome than others.
 
 The same analysis was done attribute by attribute using a Seaborn joint plot. A sample plot can be found in Figure \ref{fig:2}.
 
@@ -114,11 +114,40 @@ The same analysis was done attribute by attribute using a Seaborn joint plot. A 
 
 
 \section{Results}
-Clearly present the results of your efforts. Include all measures you deem appropriate (e.g. accuracy, sources of error, ROC curves, feature weights, etc.). Include comparisons to baseline data and results from prior work where appropriate.
+A number of multi-class classifiers were tested including KNN, Random Forest, and Gradient Boost.  No classifier performed particularly well relative to our 60$\%$ accuracy target with results being output in the 35-45$\%$ accuracy range for the first three periods with increasing accuracy for each period. These results can be found in Figure \ref{fig:3}, Figure \ref{fig:4}, and \ref{fig:5}.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=\linewidth]{period1cm}
+\caption{Period 1 accuracy score and confusion matrix heat map.}
+\label{fig:3}
+\end{figure}
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=\linewidth]{period2cm}
+\caption{Period 2 accuracy score and confusion matrix heat map.}
+\label{fig:4}
+\end{figure}
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=\linewidth]{period3cm}
+\caption{Period 3 accuracy score and confusion matrix heat map.}
+\label{fig:5}
+\end{figure}
+
+In search of a conclusive result, we included shift data and overtime results into our features and data. Shift results didn't do much to sway our results. However, when running our classifier for overtime, the results were much more favorable with accuracy scores of approximately 75$\%$. 
+
+To achieve our results with the gradient boosting classifier, score differentials were binned to $\{-1,0,1\}$. A MinMaxScaler was applied to all attributes to normalize the data and help with interpretation and comparison of models.  A GridSearch was done to help identify and understand the impact of each of the parameters on the model. Once a model was found, different iterations were performed using different features of the data based on our initial visualization analysis of features that correlated well. 
 
 \section{Discussion}
-Present your interpretation of the results. Discuss how these results might have an impact on the field - or discuss how they might suggest other directions to investigate. Discuss potential future plans for this work (even if you don't actually plan to follow up on them).
+The ability to predict the outcome for overtime is considered a significant contribution. Perhaps predicting a goal differential in terms of a number of goals was too arduous for the duration of this research. However, there are a number of reasons why the overtime period was as accurate as it was. 
 
+The overtime period is a win, lose, or draw scenario. There less classes of goal differential. Furthermore, the score is always tied going into overtime so the conditions of the game are completely different than the the second and third periods. It is understood that the first period starts off as a tie a well. However, the features for the game in the first period are not yet established. The dynamic of the game is not yet established. 
+
+In terms of predicting goal differential, we may have had better results if we attempted to calculate a goal differential and allowed non-integer values to be a result.  It is understood that you can't have a partial goal differential. However, a fractional goal differential extrapolated over an entire season could have a significant impact on a teams placement in the standings.
+ 
 
 \end{document}
 
