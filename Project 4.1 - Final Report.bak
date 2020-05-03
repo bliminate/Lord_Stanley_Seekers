@@ -1,0 +1,7 @@
+\documentclass[twocolumn,draft,letterpaper]{report}
+
+\begin{document}
+
+\title{How to Structure a LaTeX Document}
+
+\end{document}

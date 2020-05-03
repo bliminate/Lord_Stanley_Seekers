@@ -18,12 +18,18 @@
   \texttt{arthur.may@colorado.edu}
 }
 
-
-\twocolumn[
-\begin{@twocolumnfalse}
+\twocolumn[{%
+\renewcommand\twocolumn[1][]{#1}%
 \maketitle
-\end{@twocolumnfalse}
-]
+\begin{center}
+    \centering
+    \includegraphics[width=1\textwidth,height=5cm]{penaltybox}
+    \captionof{figure}{A full penalty box during an NHL Game.\cite{penaltybox}}
+\end{center}%
+}]
+
+
+
 
 \section{Problem Space}
 In the world of sports, predicting a game’s outcome has myriad benefits. It can help coaches and players
@@ -47,12 +53,17 @@ not as useful for Vegas. If your team enters the second period trailing by 2, ho
 lead? If hits have a high correlation with success, maybe play more aggressively. If blocked shots have a
 low correlation, don’t worry about taking too many bad shots at the risk of turning the puck over. Our
 goal is to see if we can find which statistics, taken from the standard metrics used in NHL statkeeping,
-can be beneficial in predicting the outcome of a period.
+can be beneficial in predicting the outcome of a period.\newline
 
+Similar research has been done in this space on the depth of such research, but not using the same approach.  In one research study, players are ranked according to how much their actions impact their team's chance of scoring the next goal.\cite{scoringimpact}  Additionally, in another study done on NHL data, researchers attempt to predict outcome based on pre-game data.\citep{scoringimpact}  Lastly, one study was done to predict NHL playoffs using Google's PageRank feature. 
 
-Our approach to address the problem iterated through three steps over multiple phases. The first step was to prepare the data. Once the data was prepared, we performed a number of visualizations around the data to get an understanding of relationships between features and the end of period goal differential. Once we had an understanding of the relationships between the features, we ran them through different machine learning classifiers based on the results we were seeking. We did not seek a binary prediction, but a goal differential which is a bit more challenging.
+\section{Approach}
 
-Several classifiers will be tested including a gradient boost, random forest, and KNN. The classifier that performed the best will be used to present the results. 
+Our approach to address the problem iterated through three steps over multiple phases. The first step was to prepare the data. Once the data was prepared, we performed a number of visualizations around the data to get an understanding of relationships between features and the end of period goal differential. Once we had an understanding of the relationships between the features, we ran them through different machine learning classifiers based on the results we were seeking. We did not seek a binary prediction, but a goal differential which is a bit more challenging. Furthermore, as we settled on our models we experimented with different normalization approaches and ran a grid search on our classifier to help fine tune the results.
+
+Several classifiers will be tested including a gradient boost, random forest, and KNN. The classifier that performed the best will be used to present the results.
+
+When our results were output we output confusion matrices to help us interpret how our model was performing relative to the other potential outcomes of the model. 
 
 \section{Data}
 
@@ -94,47 +105,47 @@ periodID & period initial goal differential & blocked shots away & blocked shots
 
 After preparing the data, a number of visualizations were performed to better understand the relationships. 
 
-Figure \ref{fig:1} contains a Seaborn violin plot. In this particular plot the difference between the home and away value of each attribute against the change in goal differential at the beginning and ending of the period. The penalty differential and takeaway differential appeared to have a strong relationship which makes sense. If you are on a powerplay more than your opponent in a period, you will have more goals. Same argument can be made for takeaways. Nonetheless, some attributes had more impact on the outcome than others.
+Figure \ref{fig:2} contains a Seaborn violin plot. In this particular plot the difference between the home and away value of each attribute against the change in goal differential at the beginning and ending of the period. The penalty differential and takeaway differential appeared to have a strong relationship which makes sense. If you are on a powerplay more than your opponent in a period, you will have more goals. Same argument can be made for takeaways. Nonetheless, some attributes had more impact on the outcome than others.
 
-The same analysis was done attribute by attribute using a Seaborn joint plot. A sample plot can be found in Figure \ref{fig:2}.
+The same analysis was done attribute by attribute using a Seaborn joint plot. A sample plot can be found in Figure \ref{fig:3}.
 
 \begin{figure}[htp]
 \centering
 \includegraphics[width=\linewidth]{violin}
 \caption{Violin plot of difference between home and away attributes vs. Outcome}
-\label{fig:1}
+\label{fig:2}
 \end{figure}
 
 \begin{figure}[htp]
 \centering
 \includegraphics[width=\linewidth]{joint}
 \caption{Joint plot of penalty differential and goal differential for the period}
-\label{fig:2}
+\label{fig:3}
 \end{figure}
 
 
 \section{Results}
-A number of multi-class classifiers were tested including KNN, Random Forest, and Gradient Boost.  No classifier performed particularly well relative to our 60$\%$ accuracy target with results being output in the 35-45$\%$ accuracy range for the first three periods with increasing accuracy for each period. These results can be found in Figure \ref{fig:3}, Figure \ref{fig:4}, and \ref{fig:5}.
+A number of multi-class classifiers were tested including KNN, Random Forest, and Gradient Boost.  No classifier performed particularly well relative to our 60$\%$ accuracy target with results being output in the 35-45$\%$ accuracy range for the first three periods with increasing accuracy for each period. These results can be found in Figure \ref{fig:4}, Figure \ref{fig:5}, and \ref{fig:6}.
 
 \begin{figure}[htp]
 \centering
 \includegraphics[width=\linewidth]{period1cm}
 \caption{Period 1 accuracy score and confusion matrix heat map.}
-\label{fig:3}
+\label{fig:4}
 \end{figure}
 
 \begin{figure}[htp]
 \centering
 \includegraphics[width=\linewidth]{period2cm}
 \caption{Period 2 accuracy score and confusion matrix heat map.}
-\label{fig:4}
+\label{fig:5}
 \end{figure}
 
 \begin{figure}[htp]
 \centering
 \includegraphics[width=\linewidth]{period3cm}
 \caption{Period 3 accuracy score and confusion matrix heat map.}
-\label{fig:5}
+\label{fig:6}
 \end{figure}
 
 In search of a conclusive result, we included shift data and overtime results into our features and data. Shift results didn't do much to sway our results. However, when running our classifier for overtime, the results were much more favorable with accuracy scores of approximately 75$\%$. 
@@ -147,7 +158,30 @@ The ability to predict the outcome for overtime is considered a significant cont
 The overtime period is a win, lose, or draw scenario. There less classes of goal differential. Furthermore, the score is always tied going into overtime so the conditions of the game are completely different than the the second and third periods. It is understood that the first period starts off as a tie a well. However, the features for the game in the first period are not yet established. The dynamic of the game is not yet established. 
 
 In terms of predicting goal differential, we may have had better results if we attempted to calculate a goal differential and allowed non-integer values to be a result.  It is understood that you can't have a partial goal differential. However, a fractional goal differential extrapolated over an entire season could have a significant impact on a teams placement in the standings.
- 
+
+\begin{thebibliography}{9}
+\bibitem{penaltybox} 
+Predators Hockey, USA Today, 2015
+\\\texttt{https://usatftw.files.wordpress.com/2015/11/ap\_jets\_predators\_hockey\_77540060.jpg}
+
+\bibitem{scoringimpact},
+Oliver Schulte, Zeyu Zhao, Mehrsan Javan, Philippe Desaulniers,
+\textit{Apples-to-Apples: Clustering and Ranking NHL Players
+Using Location Information and Scoring Impact}
+\\\texttt{http://www.sloansportsconference.com/wp-content/uploads/2017/02/1625.pdf}
+
+\bibitem{scoringimpact},
+Josh Weissbock and Diana Inkpen,
+\textit{Combining Textual Pre-game Reports and Statistical Data for Predicting Success in the National Hockey League}
+\\\texttt{https://link.springer.com/chapter/10.1007/978-3-319-06483-3_22}
+
+\bibitem{pagerank},
+Nathan Swanson, Donald Koban, Patrick Brundage,
+\textit{Predicting the NHL playoffs with PageRank}
+\\\texttt{https://www.degruyter.com/view/journals/jqas/13/4/article-p131.xml}
+
+
+\end{thebibliography}
 
 \end{document}
 
