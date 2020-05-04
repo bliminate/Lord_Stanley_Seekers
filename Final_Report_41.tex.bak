@@ -55,11 +55,11 @@ low correlation, don’t worry about taking too many bad shots at the risk of tu
 goal is to see if we can find which statistics, taken from the standard metrics used in NHL statkeeping,
 can be beneficial in predicting the outcome of a period.\newline
 
-Similar research has been done in this space on the depth of such research, but not using the same approach.  In one research study, players are ranked according to how much their actions impact their team's chance of scoring the next goal.\cite{scoringimpact}  Additionally, in another study done on NHL data, researchers attempt to predict outcome based on pre-game data.\citep{scoringimpact}  Lastly, one study was done to predict NHL playoffs using Google's PageRank feature. 
+Similar research has been done in this space on the depth of such research, but not using the same approach.  In one research study, players are ranked according to how much their actions impact their team's chance of scoring the next goal.\cite{scoringimpact}  Additionally, in another study done on NHL data, researchers attempt to predict outcome based on pre-game data.\cite{scoringimpact}  Lastly, one study was done to predict NHL playoffs using Google's PageRank feature.\cite{pagerank} 
 
 \section{Approach}
 
-Our approach to address the problem iterated through three steps over multiple phases. The first step was to prepare the data. Once the data was prepared, we performed a number of visualizations around the data to get an understanding of relationships between features and the end of period goal differential. Once we had an understanding of the relationships between the features, we ran them through different machine learning classifiers based on the results we were seeking. We did not seek a binary prediction, but a goal differential which is a bit more challenging. Furthermore, as we settled on our models we experimented with different normalization approaches and ran a grid search on our classifier to help fine tune the results.
+Our approach to address the problem iterated through three steps over multiple phases. The first step was to prepare the data. Once the data was prepared, we performed a number of visualizations around the data to get an understanding of relationships between features and the end of period goal differential. Once we had an understanding of the relationships between the features, we ran them through different machine learning classifiers based on the results we were seeking. We did not seek a binary prediction, but a goal differential which is a bit more challenging. Furthermore, as we settled on our models we experimented with different normalization approaches and ran a grid search on our classifier to help fine tune the results. We performed forward stepwise selection to determine the best subset of features to be used to predict the outcomes of each period, and used the best subset per period to train and predict the models for the individual periods.
 
 Several classifiers will be tested including a gradient boost, random forest, and KNN. The classifier that performed the best will be used to present the results.
 
@@ -148,9 +148,16 @@ A number of multi-class classifiers were tested including KNN, Random Forest, an
 \label{fig:6}
 \end{figure}
 
-In search of a conclusive result, we included shift data and overtime results into our features and data. Shift results didn't do much to sway our results. However, when running our classifier for overtime, the results were much more favorable with accuracy scores of approximately 75$\%$. 
+\begin{figure}[htp]
+\centering
+\includegraphics[width=\linewidth]{periodOTcm}
+\caption{OT accuracy score and confusion matrix heat map.}
+\label{fig:7}
+\end{figure}
 
-To achieve our results with the gradient boosting classifier, score differentials were binned to $\{-1,0,1\}$. A MinMaxScaler was applied to all attributes to normalize the data and help with interpretation and comparison of models.  A GridSearch was done to help identify and understand the impact of each of the parameters on the model. Once a model was found, different iterations were performed using different features of the data based on our initial visualization analysis of features that correlated well. 
+In search of a conclusive result, we included shift data and overtime results into our features and data. Shift results didn't do much to sway our results. However, when running our classifier for overtime, the results were much more favorable with accuracy scores of approximately 75$\%$. Details of the accuracy score and confusion matrix can be found in Figure \ref{fig:7}
+
+To achieve our results with the gradient boosting classifier, score differentials were binned to $\{-1,0,1\}$. A MinMaxScaler was applied to all attributes to normalize the data and help with interpretation and comparison of models.  A GridSearch was done to help identify and understand the impact of each of the parameters on the model. Once a model was found, different iterations were performed using different features of the data based on our initial visualization analysis of features that correlated well. We performed forward stepwise selection to determine the best subset of features to be used to predict the outcomes of each period, and used the best subset per period to train and predict the models for the individual periods.
 
 \section{Discussion}
 The ability to predict the outcome for overtime is considered a significant contribution. Perhaps predicting a goal differential in terms of a number of goals was too arduous for the duration of this research. However, there are a number of reasons why the overtime period was as accurate as it was. 
@@ -158,6 +165,11 @@ The ability to predict the outcome for overtime is considered a significant cont
 The overtime period is a win, lose, or draw scenario. There less classes of goal differential. Furthermore, the score is always tied going into overtime so the conditions of the game are completely different than the the second and third periods. It is understood that the first period starts off as a tie a well. However, the features for the game in the first period are not yet established. The dynamic of the game is not yet established. 
 
 In terms of predicting goal differential, we may have had better results if we attempted to calculate a goal differential and allowed non-integer values to be a result.  It is understood that you can't have a partial goal differential. However, a fractional goal differential extrapolated over an entire season could have a significant impact on a teams placement in the standings.
+
+When performing the forward stage-wise feature selection, it was interesting to see that different features proved more important when trying to predict the outcomes of each period. This can be interpreted to mean that depending on the phase of the game, there are different strategies that can be employed to obtain a desired outcome. Furthermore, there were some features that were important across all the periods, meaning that there are some general strategies that are independent of the game situation. For example, the penalty differential was an influential feature across all periods, meaning that it is a sound strategy to avoid taking penalties and putting your team at a disadvantage in all phases of the game. While penalties were important across all the periods, stats like blocked shots were most important in the third period, which can be attributed to a more defensive style of play used when a team is trying to preserve a lead. Likewise, the number of hits proved important in the first period and overtime periods, which likely means that using a more aggressive style of play to obtain possession of the puck will lead to more positive outcomes in these periods. Leveraging this type of feature analysis could be used by teams to adjust their strategies in real time to try to obtain the desired outcome.
+
+\twocolumn[{%
+\renewcommand\twocolumn[1][]{#1}%
 
 \begin{thebibliography}{9}
 \bibitem{penaltybox} 
@@ -173,7 +185,7 @@ Using Location Information and Scoring Impact}
 \bibitem{scoringimpact},
 Josh Weissbock and Diana Inkpen,
 \textit{Combining Textual Pre-game Reports and Statistical Data for Predicting Success in the National Hockey League}
-\\\texttt{https://link.springer.com/chapter/10.1007/978-3-319-06483-3_22}
+\\\texttt{https://link.springer.com/chapter/10.1007/978-3-319-06483-3\_22}
 
 \bibitem{pagerank},
 Nathan Swanson, Donald Koban, Patrick Brundage,
@@ -182,6 +194,7 @@ Nathan Swanson, Donald Koban, Patrick Brundage,
 
 
 \end{thebibliography}
+}]
 
 \end{document}
 

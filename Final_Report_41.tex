@@ -166,6 +166,9 @@ The overtime period is a win, lose, or draw scenario. There less classes of goal
 
 In terms of predicting goal differential, we may have had better results if we attempted to calculate a goal differential and allowed non-integer values to be a result.  It is understood that you can't have a partial goal differential. However, a fractional goal differential extrapolated over an entire season could have a significant impact on a teams placement in the standings.
 
+When performing the forward stage-wise feature selection, it was interesting to see that different features proved more important when trying to predict the outcomes of each period. This can be interpreted to mean that depending on the phase of the game, there are different strategies that can be employed to obtain a desired outcome. Furthermore, there were some features that were important across all the periods, meaning that there are some general strategies that are independent of the game situation. For example, the penalty differential was an influential feature across all periods, meaning that it is a sound strategy to avoid taking penalties and putting your team at a disadvantage in all phases of the game. While penalties were important across all the periods, stats like blocked shots were most important in the third period, which can be attributed to a more defensive style of play used when a team is trying to preserve a lead. Likewise, the number of hits proved important in the first period and overtime periods, which likely means that using a more aggressive style of play to obtain possession of the puck will lead to more positive outcomes in these periods. Leveraging this type of feature analysis could be used by teams to adjust their strategies in real time to try to obtain the desired outcome.
+
+
 \twocolumn[{%
 \renewcommand\twocolumn[1][]{#1}%
 
